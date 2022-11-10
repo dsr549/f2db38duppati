@@ -4,12 +4,54 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+require('dotenv').config();
+const connectionString =
+process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+{useNewUrlParser: true,
+useUnifiedTopology: true});
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
+db.once("open", function(){
+console.log("Connection to DB succeeded")});
+
+
 var indexRouter = require('./routes/index');
+var resourceRouter = require('./routes/resource');
 var usersRouter = require('./routes/users');
 var horseRouter = require('./routes/horse');
 var squirrelRouter = require('./routes/squirrel');
 var gridbuildRouter = require('./routes/gridbuild');
 var selectorRouter = require('./routes/selector');
+var squirrel = require("./models/squirrel");
+async function recreateDB(){
+  // Delete everything
+  await squirrel.deleteMany();
+  let instance1 = new
+  squirrel({squirrel_color:"brown",squirrel_breed:"Eastern Gray Squirrel",squirrel_price:1200});
+  instance1.save( function(err,doc) {
+    if(err) return console.error(err);
+    console.log("First object saved")
+    });
+  let instance2 = new
+  squirrel({squirrel_color:"red",squirrel_breed:"Western Gray Squirrel",squirrel_price:2000});
+  instance2.save( function(err,doc) {
+    if(err) return console.error(err);
+    console.log("second object saved")
+    });
+  let instance3 = new
+  squirrel({squirrel_color:"brown",squirrel_breed:"Arizona Gray Squirrel",squirrel_price:1800});
+  instance3.save( function(err,doc) {
+  if(err) return console.error(err);
+  console.log("Third object saved")
+  });
+ }
+ let reseed = true;
+ if (reseed) { recreateDB();}
 var app = express();
 
 // view engine setup
@@ -28,6 +70,8 @@ app.use('/horse', horseRouter);
 app.use('/squirrel', squirrelRouter);
 app.use('/gridbuild', gridbuildRouter);
 app.use('/selector', selectorRouter);
+app.use('/resource', resourceRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
