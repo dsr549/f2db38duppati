@@ -86,4 +86,66 @@ exports.squirrel_create_post = async function(req, res) {
    failed`);
     }
    };
-   
+   // Handle squirrel delete on DELETE.
+exports.squirrel_delete = async function(req, res) {
+    console.log("delete " + req.params.id)
+    try {
+    result = await squirrel.findByIdAndDelete( req.params.id)
+    console.log("Removed " + result)
+    res.send(result)
+    } catch (err) {
+    res.status(500)
+    res.send(`{"error": Error deleting ${err}}`);
+    }
+   };
+   exports.squirrel_view_one_Page = async function(req, res) {
+    console.log("single view for id " + req.query.id)
+    try{
+    result = await squirrel.findById( req.query.id)
+    res.render('squirreldetail',
+   { title: 'squirrel Detail', toShow: result });
+    }
+    catch(err){
+    res.status(500)
+    res.send(`{'error': '${err}'}`);
+    }
+   };
+   // Handle building the view for creating a squirrel.
+// No body, no in path parameter, no query.
+// Does not need to be async
+exports.squirrel_create_Page = function(req, res) {
+    console.log("create view")
+    try{
+    res.render('squirrelcreate', { title: 'squirrel Create'});
+    }
+    catch(err){
+    res.status(500)
+    res.send(`{'error': '${err}'}`);
+    }
+   };
+   // Handle building the view for updating a squirrel.
+// query provides the id
+exports.squirrel_update_Page = async function(req, res) {
+    console.log("update view for item "+req.query.id)
+    try{
+    let result = await squirrel.findById(req.query.id)
+    res.render('squirrelupdate', { title: 'squirrel Update', toShow: result });
+    }
+    catch(err){
+    res.status(500)
+    res.send(`{'error': '${err}'}`);
+    }
+   };
+   // Handle a delete one view with id from query
+exports.squirrel_delete_Page = async function(req, res) {
+    console.log("Delete view for id " + req.query.id)
+    try{
+    result = await squirrel.findById(req.query.id)
+    res.render('squirreldelete', { title: 'squirrel Delete', toShow:
+   result });
+    }
+    catch(err){
+    res.status(500)
+    res.send(`{'error': '${err}'}`);
+    }
+   };
