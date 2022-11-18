@@ -1,22 +1,21 @@
 extends layout
 block content
-  div(class="container-fluid")
-    h1= title
-     -let result=results 
-    
-      div(class="row")
-       each form,index in result
-        div(class = "col-sm-6  bg-success" onclick=`buy(${index})`) #{form.squirrel_color}        
-        div(class = "col-sm-6 bg-success" onclick=`buy(${index})`) #{form.squirrel_breed}        
-        div(class = "col-sm-6 bg-success" onclick=`buy(${index})`) #{form.squirrel_price}
-        hr
-      script.     
-       function buy(itemNo)
-       {
-         alert(`You purchased Item ${itemNo+1}`)
-       }
-  
+    div(class="container-fluid")
+        h1= title
+    - let result=results 
+        div(class="container-fluid")
+        div(class="row m-1")
+        each item in result
+         -let destination = `dispatch(\"/squirrel/update?id=${item._id}\")`
+         div(class="row-sm-2", class="m-1") Item#{item.squirrel_color}(#{item.squirrel_breed}) is #{item.squirrel_price}
+          button.btn( class="btn-primary ml-1", onclick= destination) Update
 
-  
-  
-
+    script.
+        function buy(itemNo)
+        {
+            alert(`You purchased Item ${itemNo+1}`)
+        }
+    script.
+        function dispatch(path){
+            window.location.href=path
+        }

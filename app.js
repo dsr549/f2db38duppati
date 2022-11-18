@@ -6,8 +6,7 @@ var logger = require('morgan');
 
 
 require('dotenv').config();
-const connectionString =
-process.env.MONGO_CON
+const connectionString =process.env.MONGO_CON
 mongoose = require('mongoose');
 mongoose.connect(connectionString,
 {useNewUrlParser: true,
@@ -28,6 +27,7 @@ var squirrelRouter = require('./routes/squirrel');
 var gridbuildRouter = require('./routes/gridbuild');
 var selectorRouter = require('./routes/selector');
 var squirrel = require("./models/squirrel");
+const squirrel = require('./models/squirrel');
 async function recreateDB(){
   // Delete everything
   await squirrel.deleteMany();
