@@ -13,12 +13,20 @@ var router = express.Router();
 /* GET squirrels */
 router.get('/', squirrel_controlers.squirrel_view_all_Page );
 /* GET detail squirrel page */
-router.get('/detail', squirrel_controlers.squirrel_view_one_Page);
+router.get('/detail',secured, squirrel_controlers.squirrel_view_one_Page);
 /* GET create squirrel page */
-router.get('/create', squirrel_controlers.squirrel_create_Page);
+router.get('/create',secured, squirrel_controlers.squirrel_create_Page);
 /* GET create update page */
-router.get('/update', squirrel_controlers.squirrel_update_Page);
+const secured = (req, res, next) => {
+  if (req.user){
+  return next();
+  }
+  req.session.returnTo = req.originalUrl;
+  res.redirect("/login");
+  }
+router.get('/update',secured, squirrel_controlers.squirrel_update_Page);
+
 /* GET delete squirrel page */
-router.get('/delete', squirrel_controlers.squirrel_delete_Page);
+router.get('/delete',secured,squirrel_controlers.squirrel_delete_Page);
 module.exports = router;
 
